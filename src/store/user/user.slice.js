@@ -18,3 +18,4 @@ export const {setCurrentUser} = userSlice.actions
 
 export const userReducer = userSlice.reducer
 
+export const selectCurrentUser = (state) => state.user.currentUser
