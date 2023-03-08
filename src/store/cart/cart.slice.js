@@ -1,5 +1,38 @@
-import { createAction } from '../../utils/reducer/reducer.utils';
-import { CART_ACTION_TYPES } from './cart.types';
+import { createSlice } from "@reduxjs/toolkit";
+
+const initialState = {
+   isCartOpen: false,
+   cartItems: []
+}
+
+const cartSlice = createSlice({
+   name: 'cart',
+   initialState,
+   reducers: {
+      setIsCartOpen(state, action) {
+         state.isCartOpen = action.payload
+      },
+
+      addItemToCart(state, action) {
+         const newCartItems = addCartItem(state.cartItems, action.payload)
+         state.cartItems = newCartItems
+      },
+
+      removeItemFromCart(state, action) {
+         const newCartItems = removeCartItem(state.cartItems, action.payload)
+         state.cartItems = newCartItems
+      },
+
+      clearItemFromCart(state, action) {
+        const newCartItems = clearCartItem(state.cartItems, action.payload)
+        state.cartItems = newCartItems
+      }
+   }
+})
+
+export const {setIsCartOpen, addItemToCart, removeItemFromCart, clearItemFromCart} = cartSlice.actions
+export const cartReducer = cartSlice.reducer
+
 
 const addCartItem = (cartItems, productToAdd) => {
   const existingCartItem = cartItems.find(
@@ -38,21 +71,3 @@ const removeCartItem = (cartItems, cartItemToRemove) => {
 
 const clearCartItem = (cartItems, cartItemToClear) =>
   cartItems.filter((cartItem) => cartItem.id !== cartItemToClear.id);
-
-export const addItemToCart = (cartItems, productToAdd) => {
-  const newCartItems = addCartItem(cartItems, productToAdd);
-  return createAction(CART_ACTION_TYPES.SET_CART_ITEMS, newCartItems);
-};
-
-export const removeItemFromCart = (cartItems, cartItemToRemove) => {
-  const newCartItems = removeCartItem(cartItems, cartItemToRemove);
-  return createAction(CART_ACTION_TYPES.SET_CART_ITEMS, newCartItems);
-};
-
-export const clearItemFromCart = (cartItems, cartItemToClear) => {
-  const newCartItems = clearCartItem(cartItems, cartItemToClear);
-  return createAction(CART_ACTION_TYPES.SET_CART_ITEMS, newCartItems);
-};
-
-export const setIsCartOpen = (boolean) =>
-  createAction(CART_ACTION_TYPES.SET_IS_CART_OPEN, boolean);
